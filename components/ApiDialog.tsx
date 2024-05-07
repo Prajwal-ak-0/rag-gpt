@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Dialog,
   DialogContent,
@@ -22,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { addApiKey } from "@/utils/CreateUser";
+import axios from "axios";
 
 const formSchema = z.object({
   apiKey: z.string().min(10).max(500),
@@ -30,14 +31,15 @@ const formSchema = z.object({
 
 interface ApiDialogProps {
   hasApiKey: boolean;
-  userId: string;
 }
 
-const ApiDialog: React.FC<ApiDialogProps> = ({ hasApiKey,userId }) => {
+const ApiDialog: React.FC<ApiDialogProps> = ({ hasApiKey }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsOpen(!hasApiKey);
+    setIsClient(true);
   }, [hasApiKey]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,12 +51,22 @@ const ApiDialog: React.FC<ApiDialogProps> = ({ hasApiKey,userId }) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-        const res = await addApiKey(userId, values.apiKey);
-        console.log(res);
+      console.log("API Key: ", values.apiKey);
+
+      const res = await axios.post("/api/add-api", {
+        apiKey: values.apiKey,
+      });
+
+      console.log("Response: ", res);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   }
+
+  if (!isClient) {
+    return null;
+  }
+
   return (
     <div>
       <Dialog open={hasApiKey}>
@@ -74,7 +86,9 @@ const ApiDialog: React.FC<ApiDialogProps> = ({ hasApiKey,userId }) => {
                     name="apiKey"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-black">OpenAI API Key</FormLabel>
+                        <FormLabel className="text-black">
+                          OpenAI API Key
+                        </FormLabel>
                         <FormControl>
                           <Input placeholder="Api Key" {...field} />
                         </FormControl>
