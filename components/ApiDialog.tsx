@@ -8,28 +8,87 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { addApiKey } from "@/utils/CreateUser";
+
+const formSchema = z.object({
+  apiKey: z.string().min(10).max(500),
+});
 
 interface ApiDialogProps {
   hasApiKey: boolean;
+  userId: string;
 }
 
-const ApiDialog: React.FC<ApiDialogProps> = ({ hasApiKey }) => {
+const ApiDialog: React.FC<ApiDialogProps> = ({ hasApiKey,userId }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setIsOpen(!hasApiKey);
   }, [hasApiKey]);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      apiKey: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+        const res = await addApiKey(userId, values.apiKey);
+        console.log(res);
+    } catch (error) {
+        console.log(error);
+    }
+  }
   return (
     <div>
       <Dialog open={hasApiKey}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Enter your OpenAI API Key</DialogTitle>
+            <DialogTitle className="text-center">
+              Enter your OpenAI API Key
+            </DialogTitle>
             <DialogDescription>
-              To use our service, you need to provide your OpenAI API key. This
-              key will be used to make requests to the OpenAI API on your
-              behalf. Please ensure that you keep this key secure and do not
-              share it with anyone.
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8 py-8"
+                >
+                  <FormField
+                    control={form.control}
+                    name="apiKey"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-black">OpenAI API Key</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Api Key" {...field} />
+                        </FormControl>
+                        <FormDescription className="text-black">
+                          To use our service, you need to provide your OpenAI
+                          API key.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit">Submit</Button>
+                </form>
+              </Form>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

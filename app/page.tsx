@@ -13,7 +13,7 @@ export default async function Home() {
     <div>
       {hasApiKey ? "Has API Key" : "No API Key"}
       <UserButton afterSignOutUrl="/" />
-      <ApiDialog hasApiKey={!hasApiKey} />
+      <ApiDialog hasApiKey={!hasApiKey} userId={(user as User)?.clerkId} />
     </div>
   );
 }
