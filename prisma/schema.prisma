@@ -8,11 +8,58 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  clerkId       String   @unique
-  username      String   @unique
+  id            Int       @id @default(autoincrement())
+  clerkId       String    @unique
+  username      String    @unique
   email         String?   @unique
   provider      String?
-  apiKey       String?
-  isApiVerified Boolean? @default(false)
+  apiKey        String?
+  isApiVerified Boolean?  @default(false)
+  token         String?   @unique
+  lastLogin     DateTime?
+  link          String?
+  documents     Document[] 
+  queries       Query[]   
+}
+
+model Document {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  content     String
+  fileLink    String
+  uploadTime  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  chunks      Chunk[] 
+}
+
+model Chunk {
+  id          Int      @id @default(autoincrement())
+  documentId  Int
+  content     String
+  embedding   String
+  document    Document @relation(fields: [documentId], references: [id])
+}
+
+model Query {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  content     String
+  time        DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  responses   Response[]
+}
+
+model Response {
+  id          Int      @id @default(autoincrement())
+  queryId     Int
+  content     String
+  time        DateTime @default(now())
+  query       Query    @relation(fields: [queryId], references: [id])
+}
+
+model Model {
+  id            Int      @id @default(autoincrement())
+  name          String
+  version       String
+  trainingDate  DateTime
 }

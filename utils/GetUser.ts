@@ -17,6 +17,12 @@ export const getUser = async () => {
             }
         });
 
+        if(!user) {
+            return {
+                error: "User not found!"
+            }
+        }
+
         return user;
     } catch (error) {
         console.log(error);
