@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   apiKey: z.string().min(10).max(500),
@@ -34,13 +35,15 @@ interface ApiDialogProps {
 }
 
 const ApiDialog: React.FC<ApiDialogProps> = ({ hasApiKey }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    setIsOpen(!hasApiKey);
+    if(hasApiKey) {
+      router.push("/home");
+    } 
     setIsClient(true);
-  }, [hasApiKey]);
+  }, [hasApiKey, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,6 +60,10 @@ const ApiDialog: React.FC<ApiDialogProps> = ({ hasApiKey }) => {
         apiKey: values.apiKey,
       });
 
+      if(res.status === 200) {
+        router.push("/home");
+      }
+
       console.log("Response: ", res);
     } catch (error) {
       console.log(error);
@@ -69,7 +76,7 @@ const ApiDialog: React.FC<ApiDialogProps> = ({ hasApiKey }) => {
 
   return (
     <div>
-      <Dialog open={hasApiKey}>
+      <Dialog open={!hasApiKey}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-center">

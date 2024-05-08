@@ -11,6 +11,16 @@ export const createUser = async () => {
       };
     }
 
+    const existingUser = await client.user.findUnique({
+      where: { clerkId: userClerkData.id },
+    });
+
+    if (existingUser) {
+      return {
+        error: "User with this Clerk ID already exists!",
+      };
+    }
+
     const user = await client.user.create({
       data: {
         clerkId: userClerkData?.id,

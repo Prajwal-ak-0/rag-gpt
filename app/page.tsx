@@ -1,21 +1,30 @@
-import { UserButton } from "@clerk/nextjs";
 import { getUser } from "../utils/GetUser";
 
-import { User } from "@/types/User";
 import ApiDialog from "@/components/ApiDialog";
 import { createUser } from "@/utils/CreateUser";
 
-export default async function Home() {
+export default async function Home({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const user = await getUser();
   const create = await createUser();
 
-  const hasApiKey = (user && 'isApiVerified' in user) ? user.isApiVerified : false;
+  const hasApiKey =
+    user && "isApiVerified" in user ? user.isApiVerified : false;
 
   return (
-    <div>
-      {hasApiKey ? "Has API Key" : "No API Key"}
-      <UserButton afterSignOutUrl="/" />
-      <ApiDialog hasApiKey={!hasApiKey} />
+    <div className="bg-[#0e0e0f] min-h-screen flex ">
+      {children}
+      <ApiDialog hasApiKey={hasApiKey ?? false} />
     </div>
   );
+}
+
+{
+  /* <div className={1 ? "280px" : "ml-[70px]"}>
+<UserButton afterSignOutUrl="/" /> 
+Hello World
+</div> */
 }
