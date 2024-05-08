@@ -12,7 +12,7 @@ const ClosedSidebar = () => {
   const { isOpen, toggle } = useSidebar();
 
   return (
-    <div className="fixed w-[70px] bg-[#303030]/60 shadow-lg shadow-[#303030] flex flex-col justify-between h-screen">
+    <div className="fixed w-[70px] shadow-lg shadow-[#303030] flex flex-col justify-between h-screen">
       <div className="">
         <Hint label="Expand Menu" side="right" asChild>
           <div
