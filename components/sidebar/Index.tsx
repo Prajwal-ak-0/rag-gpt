@@ -22,7 +22,7 @@ const Sidebar = () => {
     return null;
   }
   return (
-    <div>
+    <div className="">
         {
             isOpen ? (
                 <div>

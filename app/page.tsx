@@ -15,7 +15,7 @@ export default async function Home({
     user && "isApiVerified" in user ? user.isApiVerified : false;
 
   return (
-    <div className="bg-[#0e0e0f] min-h-screen flex ">
+    <div className="bg-[#0e0e0f]">
       {children}
       <ApiDialog hasApiKey={hasApiKey ?? false} />
     </div>
