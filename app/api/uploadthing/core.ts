@@ -19,14 +19,33 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
         if ('clerkId' in metadata.user) {
-            await client.user.update({
-                where:{
+            const user = await client.user.findUnique({
+                where: {
                     clerkId: metadata.user.clerkId
-                },
-                data:{
-                    link:file.url
                 }
             });
+
+            if (user && user.link) {
+              await client.user.update({
+                where:{
+                  clerkId: metadata.user.clerkId
+                },
+                data:{
+                  link: {
+                    set: `${user.link},${file.url}`
+                  }
+                }
+              });
+            } else {
+                await client.user.update({
+                    where:{
+                        clerkId: metadata.user.clerkId
+                    },
+                    data:{
+                        link: file.url
+                    }
+                });
+            }
         }
 
         return { fileUrl: file.url };
