@@ -30,6 +30,24 @@ export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
     }
   };
 
+
+  // useEffect(() => {
+  //   const link = 'https://utfs.io/f/dc5a4f73-4e49-4b6c-bed6-cbc63ed1726f-2gj.pdf';
+  //   const corsHeaders = {
+  //     "Access-Control-Allow-Origin": "*",
+  //     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  //     "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  //   };
+  //   fetch(`http://127.0.0.1:8000/pdf/?link=${encodeURIComponent(link)}`, {
+  //     headers: corsHeaders
+  //   })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log(data);
+  //     });
+  // }, []);
+
+
   useEffect(() => {
     handleUpload();
   }, []);
