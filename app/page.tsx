@@ -31,10 +31,3 @@ export default async function Home({
     </div>
   );
 }
-
-{
-  /* <div className={1 ? "280px" : "ml-[70px]"}>
-<UserButton afterSignOutUrl="/" /> 
-Hello World
-</div> */
-}
