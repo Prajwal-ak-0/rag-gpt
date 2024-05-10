@@ -5,6 +5,7 @@ import useSidebar from "@/hooks/useSideBar";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import BottomInput from "@/components/BottomInput";
+import { exec, spawn, fork } from "child_process";
 
 const HomePage = () => {
   const { isOpen } = useSidebar();
@@ -23,6 +24,8 @@ const HomePage = () => {
         <Hero />
         <BottomInput />
       </div>
+
+
     </div>
   );
 };
