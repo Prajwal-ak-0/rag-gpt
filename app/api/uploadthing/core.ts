@@ -9,7 +9,7 @@ export const ourFileRouter = {
   fileUploader: f({ 
     "application/pdf": { 
       maxFileSize: "16MB", 
-      maxFileCount: 1 
+      maxFileCount: 5 
     } 
   })
     .middleware(async () => {
