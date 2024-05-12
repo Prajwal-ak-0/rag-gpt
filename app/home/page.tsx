@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import BottomInput from "@/components/BottomInput";
 import { exec, spawn, fork } from "child_process";
-import { GetPDF } from "@/utils/GetPdf";
+import { GetPDF } from "@/utils/DownloadPdf";
 import { toast } from "sonner";
 import { WebPDFLoader } from "langchain/document_loaders/web/pdf";
 

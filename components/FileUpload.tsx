@@ -1,12 +1,13 @@
 "use client";
 
 import { toast } from "sonner";
-import { GetPDF } from "@/utils/GetPdf";
+import { DownloadPDF } from "@/utils/DownloadPdf";
 import { UploadDropzone } from "@/utils/uploadthing";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCallback } from "react";
+import { Rag } from "@/utils/Rag";
 
 interface FileUploadProps {
   onChange: (url?: string) => void;
@@ -17,39 +18,47 @@ export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
   const [url, setUrl] = useState<string>("");
   const [pdf, setPdf] = useState<string>("");
 
-  const afterGettingLink = useCallback(async () => {
-    try {
-      const text = await GetPDF(url);
-      setPdf(text);
-      console.log("PDF", pdf);
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong while uploading file");
-    }
-  }, [url, pdf]); 
+  // const afterGettingLink = useCallback(async () => {
+  //   try {
+  //     const text = await GetPDF(url);
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Something went wrong while uploading file");
+  //   }
+  // }, [url, pdf]);
 
-  const getTheLink = useCallback(async () => {
-    try {
-      const res = await axios.get("/api/pdf/read");
-      console.log("Link", res?.data?.link);
-      setUrl(res?.data?.link);
-      toast.success("File uploaded successfully");
-      if (res?.data?.error) {
-        throw new Error(res?.data?.error);
-      }
-      setUrl(res?.data?.link);
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong while uploading file");
-    }
-  }, []); 
+  // const getTheLink = useCallback(async () => {
+  //   try {
+  //     const res = await axios.get("/api/retrieval");
+  //     console.log("RES", res);
+  //     toast.success("File uploaded successfully");
+  //     if (res?.data?.error) {
+  //       throw new Error(res?.data?.error);
+  //     }
+  //     setUrl(res?.data?.link);
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Something went wrong while uploading file");
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   getTheLink();
+  //   if(url) {
+  //     afterGettingLink();
+  //   }
+  // }, [getTheLink, url, afterGettingLink]);
+
+  // useEffect(() => {
+  //   getTheLink();
+  // }), [getTheLink];
 
   useEffect(() => {
-    getTheLink();
-    if(url) {
-      afterGettingLink();
-    }
-  }, [getTheLink, url, afterGettingLink]);
+    const pdfUrl =
+      "https://utfs.io/f/877538c9-48c4-4561-87e1-a1cf737dcd5f-v5ud9p.pdf";
+    DownloadPDF(pdfUrl);
+    Rag();
+  }, []);
 
   return (
     <UploadDropzone
