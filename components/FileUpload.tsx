@@ -7,7 +7,6 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCallback } from "react";
-import { Rag } from "@/utils/Rag";
 
 interface FileUploadProps {
   onChange: (url?: string) => void;
@@ -15,8 +14,8 @@ interface FileUploadProps {
 }
 
 export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
-  const [url, setUrl] = useState<string>("");
-  const [pdf, setPdf] = useState<string>("");
+  // const [url, setUrl] = useState<string>("");
+  // const [pdf, setPdf] = useState<string>("");
 
   // const afterGettingLink = useCallback(async () => {
   //   try {
@@ -53,12 +52,12 @@ export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
   //   getTheLink();
   // }), [getTheLink];
 
-  useEffect(() => {
-    const pdfUrl =
-      "https://utfs.io/f/877538c9-48c4-4561-87e1-a1cf737dcd5f-v5ud9p.pdf";
-    DownloadPDF(pdfUrl);
-    Rag();
-  }, []);
+  // useEffect(() => {
+  //   const pdfUrl =
+  //     "https://utfs.io/f/877538c9-48c4-4561-87e1-a1cf737dcd5f-v5ud9p.pdf";
+  //   // DownloadPDF(pdfUrl);
+  //   Rag(pdfUrl);
+  // }, []);
 
   return (
     <UploadDropzone

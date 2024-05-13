@@ -7,66 +7,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Sender {
+  USER
+  BOT
+}
+
 model User {
-  id            Int        @id @default(autoincrement())
-  clerkId       String     @unique
-  username      String     @unique
-  email         String?    @unique
-  provider      String?
-  apiKey        String?
-  isApiVerified Boolean?   @default(false)
-  token         String?    @unique
-  lastLogin     DateTime?
-  link          String?
+  clerkId       String        @unique
+  username      String        @unique
+  email         String        @unique
+  apiKey        String?       @unique
+  isApiVerified Boolean?      @default(false)
+  links         String[]
   documents     Document[]
   queries       Query[]
+  chatHistory   ChatHistory[]
 }
-
-// model Link {
-//   id     Int    @id @default(autoincrement())
-//   url    String
-//   userId Int
-//   user   User   @relation(fields: [userId], references: [id])
-// }
 
 model Document {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  content    String
-  fileLink   String
-  uploadTime DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
-  chunks     Chunk[]
-}
-
-model Chunk {
-  id         Int      @id @default(autoincrement())
-  documentId Int
-  content    String
-  embedding  String
-  document   Document @relation(fields: [documentId], references: [id])
+  id               Int      @id @default(autoincrement())
+  clerkId          String
+  title            String?
+  content          String?
+  storedInVectorDB Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  user             User     @relation(fields: [clerkId], references: [clerkId])
 }
 
 model Query {
-  id        Int        @id @default(autoincrement())
-  userId    Int
-  content   String
-  time      DateTime   @default(now())
-  user      User       @relation(fields: [userId], references: [id])
-  responses Response[]
+  id        Int      @id @default(autoincrement())
+  clerkId   String
+  query     String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [clerkId], references: [clerkId])
 }
 
-model Response {
-  id      Int      @id @default(autoincrement())
-  queryId Int
-  content String
-  time    DateTime @default(now())
-  query   Query    @relation(fields: [queryId], references: [id])
-}
-
-model Model {
-  id           Int      @id @default(autoincrement())
-  name         String
-  version      String
-  trainingDate DateTime
+model ChatHistory {
+  id        Int      @id @default(autoincrement())
+  clerkId   String
+  message   String
+  sender    Sender
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [clerkId], references: [clerkId])
 }
