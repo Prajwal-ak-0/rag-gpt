@@ -41,7 +41,7 @@ export const UploadPDFContentToVectorDB = async (url: string) => {
   const userId = await getUserId();
 
   if (typeof userId === "string") {
-    chunkAndStoreInVectorDB(docs, userId);
+    chunkAndStoreInVectorDB(docs, userId,url);
   } else {
     console.error(userId.error);
   }
@@ -49,7 +49,8 @@ export const UploadPDFContentToVectorDB = async (url: string) => {
 
 const chunkAndStoreInVectorDB = async (
   docs: Document<Record<string, any>>[],
-  userId: string
+  userId: string,
+  link: string
 ) => {
   const textSplitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1500,
@@ -71,6 +72,7 @@ const chunkAndStoreInVectorDB = async (
   );
 
   await vectorStore.addDocuments(splits, { namespace: userId });
+  await updateDocumentInDB(userId, docs[0], link);
 
   console.log("Documents added to Pinecone");
 };
@@ -108,6 +110,10 @@ export const RAG = async (query: string) => {
     .invoke(updatedQ);
 
   const result = finalLLM(updatedQ, searchResults);
+  console.log("Query : ",query);
+  console.log("Updated Query : ",updatedQ);
+  console.log("Search Results : ",searchResults);
+  console.log("Result : ",result);
   return result;
 };
 
@@ -190,13 +196,7 @@ const retrieveHistory = async (userId: string) => {
 
 const updatedQuery = async (userId: string, query: string) => {
   const llm = new ChatOpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
-  const prompt = await pull<ChatPromptTemplate>("rlm/rag-prompt");
-  const ragChain = await createStuffDocumentsChain({
-    llm,
-    prompt,
-    outputParser: new StringOutputParser(),
-  });
-
+  
   const contextualizeQSystemPrompt = `Given a chat history and the latest user question which might reference context in the chat history formulate a standalone question which can be understood without the chat history. Do NOT answer the question, just reformulate it if needed and otherwise return it as is.`;
 
   const contextualizeQPrompt = ChatPromptTemplate.fromMessages([
@@ -211,6 +211,8 @@ const updatedQuery = async (userId: string, query: string) => {
 
   const history = await retrieveHistory(userId);
 
+  console.log("History: ", history);
+
   const updatedQ = await contextualizeQChain.invoke({
     chat_history: history,
     question: query,
@@ -218,6 +220,20 @@ const updatedQuery = async (userId: string, query: string) => {
 
   return updatedQ;
 };
+
+const updateDocumentInDB = async (userId:string, document: Document<Record<string, any>>, link:string) => {
+  try {
+    await client.document.create({
+      data: {
+        clerkId: userId,
+        title: document.metadata.pdf.info.Title,
+        link: link,
+      },
+    });
+  } catch (error) {
+    console.log("Error in updating document: ", error);
+  }
+}
 
 const updateHistoryInDB = async (
   userId: string,

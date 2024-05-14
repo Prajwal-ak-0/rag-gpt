@@ -28,8 +28,7 @@ model Document {
   id               Int      @id @default(autoincrement())
   clerkId          String
   title            String?
-  content          String?
-  storedInVectorDB Boolean  @default(false)
+  link             String?
   createdAt        DateTime @default(now())
   user             User     @relation(fields: [clerkId], references: [clerkId])
 }
