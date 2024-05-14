@@ -30,7 +30,6 @@ export const createUser = async () => {
           ?.toLowerCase()
           .replace(/\s+/g, "")}`,
         email: userClerkData?.emailAddresses[0].emailAddress || "",
-        provider: userClerkData?.externalAccounts[0].provider,
       },
     });
 

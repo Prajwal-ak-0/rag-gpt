@@ -26,6 +26,11 @@ import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { HandlebarsPromptTemplate } from "langchain/experimental/prompts/handlebars";
 
+enum SenderType {
+  USER,
+  BOT,
+}
+
 // Take URL as the input and return the document(Containing the content of the PDF)
 export const UploadPDFContentToVectorDB = async (url: string) => {
   const response = await fetch(url);
@@ -102,13 +107,21 @@ export const RAG = async (query: string) => {
     })
     .invoke(updatedQ);
 
-  finalLLM(updatedQ, searchResults);
+  const result = finalLLM(updatedQ, searchResults);
+  return result;
 };
 
 const finalLLM = async (
   query: string,
   docs: Document<Record<string, any>>[]
 ) => {
+  const userId = await getUserId();
+
+  if (typeof userId !== "string") {
+    console.error(userId.error);
+    return;
+  }
+
   const llm = new ChatOpenAI({
     model: "gpt-3.5-turbo",
     temperature: 0,
@@ -133,7 +146,13 @@ const finalLLM = async (
     question: query,
   });
 
-  console.log(result);
+  updateQueryInDB(userId, query);
+  updateHistoryInDB(userId, query, SenderType.USER);
+  updateHistoryInDB(userId, result, SenderType.BOT);
+
+  console.log("Final result: ", result);
+
+  return result;
 };
 
 const retrieveHistory = async (userId: string) => {
@@ -198,6 +217,37 @@ const updatedQuery = async (userId: string, query: string) => {
   });
 
   return updatedQ;
+};
+
+const updateHistoryInDB = async (
+  userId: string,
+  message: string,
+  sender: SenderType
+) => {
+  try {
+    await client.chatHistory.create({
+      data: {
+        clerkId: userId,
+        message: message,
+        sender: sender === SenderType.USER ? "USER" : "BOT",
+      },
+    });
+  } catch (error) {
+    console.log("Error in updating history: ", error);
+  }
+};
+
+const updateQueryInDB = async (userId: string, query: string) => {
+  try {
+    await client.query.create({
+      data: {
+        clerkId: userId,
+        query: query,
+      },
+    });
+  } catch (error) {
+    console.log("Error in updating query: ", error);
+  }
 };
 
 const getUserId = async () => {

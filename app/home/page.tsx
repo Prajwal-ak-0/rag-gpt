@@ -12,27 +12,30 @@ import { RAG, UploadPDFContentToVectorDB } from "@/utils/Rag";
 
 const HomePage = () => {
   const { isOpen } = useSidebar();
-  const [data, setData] = useState<string>("");
-
+  const [chatContent, setChatContent] = useState([]);
   // const handleUpload = async () => {
   //   try {
   //     const text = await GetPDF();
   //     setData(text);
-      
+
   //   } catch (error) {
   //     console.error(error);
   //     toast.error("Something went wrong while uploading file");
   //   }
   // };
 
+  const GetQueryAndwer = async () => {
+    const query = "How is Amrok related to her?";
+    const res = await RAG(query);
+    console.log(res);
+  };
+
   useEffect(() => {
     const pdfUrl =
       "https://utfs.io/f/877538c9-48c4-4561-87e1-a1cf737dcd5f-v5ud9p.pdf";
     // UploadPDFContentToVectorDB(pdfUrl);
-    const query = "How is Amrok related to her?"
-    RAG(query);
+    GetQueryAndwer();
   }, []);
-
 
   return (
     // <div className="flex">
@@ -50,8 +53,7 @@ const HomePage = () => {
     //   </div>
     // </div>
 
-    <div>
-    </div>
+    <div></div>
   );
 };
 
