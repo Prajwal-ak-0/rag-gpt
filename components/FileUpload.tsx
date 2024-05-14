@@ -31,10 +31,11 @@
 
 import { useDropzone } from "@uploadthing/react";
 import { generateClientDropzoneAccept } from "uploadthing/client";
-
+import { IoSend } from "react-icons/io5";
 import { useUploadThing } from "@/utils/uploadthing";
 import { useCallback, useState } from "react";
 import { FaFileUpload } from "react-icons/fa";
+import { Hint } from "./Hint";
 
 export function FileUpload() {
   const [files, setFiles] = useState<File[]>([]);
@@ -64,7 +65,7 @@ export function FileUpload() {
   });
 
   return (
-    <div className="text-2xl cursor-pointer" {...getRootProps()}>
+    <div className="text-2xl " {...getRootProps()}>
       <input {...getInputProps()} />
       <div>
         {files.length > 0 && (
@@ -73,7 +74,14 @@ export function FileUpload() {
           </button>
         )}
       </div>
-      <FaFileUpload />
+      <div className="h-fit w-fit flex gap-x-4">
+        <Hint label="Upload File" side="bottom" asChild>
+          <FaFileUpload className="text-white cursor-pointer" />
+        </Hint>
+        <Hint label="Submit" side="bottom" asChild>
+          <IoSend className="text-white cursor-pointer" />
+        </Hint>
+      </div>
     </div>
   );
 }

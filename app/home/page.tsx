@@ -19,22 +19,29 @@ const HomePage = () => {
   //   const query = "Can you choose one technology from it and explain it?"
   //   RAG(query);
   // })
-  
+
   return (
-    <div className="flex">
-      <Sidebar />
-      <div
-        className={
-          isOpen
-            ? "ml-[280px] w-full min-h-screen text-white flex flex-col gap-y-2"
-            : "ml-[70px] w-full min-h-screen text-white flex flex-col gap-y-2"
-        }
-      >
+    <>
+      <div className="md:flex hidden">
+        <Sidebar />
+        <div
+          className={
+            isOpen
+              ? "ml-[280px] w-full min-h-screen text-white flex flex-col gap-y-2"
+              : "ml-[70px] w-full min-h-screen text-white flex flex-col gap-y-2"
+          }
+        >
+          <Navbar />
+          <Hero />
+          <BottomInput />
+        </div>
+      </div>
+      <div className="md:hidden">
         <Navbar />
         <Hero />
         <BottomInput />
       </div>
-    </div>
+    </>
   );
 };
 
