@@ -7,6 +7,7 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCallback } from "react";
+import { RAG } from "@/utils/Rag";
 
 interface FileUploadProps {
   onChange: (url?: string) => void;
@@ -59,6 +60,18 @@ export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
   //   Rag(pdfUrl);
   // }, []);
 
+  const GetQueryAndwer = async () => {
+    const query = "How is Amrok related to her?";
+    const res = await RAG(query);
+    console.log(res);
+  };
+
+  useEffect(() => {
+    const pdfUrl =
+      "https://utfs.io/f/877538c9-48c4-4561-87e1-a1cf737dcd5f-v5ud9p.pdf";
+    // UploadPDFContentToVectorDB(pdfUrl);
+    GetQueryAndwer();
+  }, []);
   return (
     <UploadDropzone
       endpoint={endpoint}

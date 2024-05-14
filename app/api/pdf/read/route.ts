@@ -17,7 +17,7 @@ export async function GET(request: Request) {
         clerkId: userClerkData.id,
       },
       select: {
-        link: true,
+        links: true,
       },
     });
 
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
       };
     }
 
-    if (!link.link) {
+    if (!link.links) {
       return {
         error: "Link URL not found!",
       };

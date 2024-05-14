@@ -25,27 +25,24 @@ export const ourFileRouter = {
                 }
             });
 
-            if (user && user.link) {
-              await client.user.update({
-                where:{
-                  clerkId: metadata.user.clerkId
-                },
-                data:{
-                  link: {
-                    set: `${user.link},${file.url}`
-                  }
-                }
-              });
-            } else {
-                await client.user.update({
-                    where:{
-                        clerkId: metadata.user.clerkId
-                    },
-                    data:{
-                        link: file.url
-                    }
-                });
+            if (!user) {
+                throw new Error("User not found");
             }
+
+            const updatedLinks = [...user.links, file.url]; // replace newLink with your actual link
+
+            const link = await client.user.update({
+              where:{
+                clerkId:metadata.user.clerkId
+              },
+              data:{
+                links:updatedLinks
+              }
+            })
+
+            console.log("Link", link);
+
+            
         }
 
         return { fileUrl: file.url };
