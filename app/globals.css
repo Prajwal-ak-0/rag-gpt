@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 body {
-  --background: linear-gradient(to right, #1e2024, #23272b);
-  background: var(--background);
+  /* --background: linear-gradient(to right, #1e2024, #23272b);
+  background: var(--background); */
   margin: 0;
   height: 100%;
   background-repeat: no-repeat;

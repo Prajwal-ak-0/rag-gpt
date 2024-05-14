@@ -15,50 +15,6 @@ interface FileUploadProps {
 }
 
 export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
-  // const [url, setUrl] = useState<string>("");
-  // const [pdf, setPdf] = useState<string>("");
-
-  // const afterGettingLink = useCallback(async () => {
-  //   try {
-  //     const text = await GetPDF(url);
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error("Something went wrong while uploading file");
-  //   }
-  // }, [url, pdf]);
-
-  // const getTheLink = useCallback(async () => {
-  //   try {
-  //     const res = await axios.get("/api/retrieval");
-  //     console.log("RES", res);
-  //     toast.success("File uploaded successfully");
-  //     if (res?.data?.error) {
-  //       throw new Error(res?.data?.error);
-  //     }
-  //     setUrl(res?.data?.link);
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error("Something went wrong while uploading file");
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   getTheLink();
-  //   if(url) {
-  //     afterGettingLink();
-  //   }
-  // }, [getTheLink, url, afterGettingLink]);
-
-  // useEffect(() => {
-  //   getTheLink();
-  // }), [getTheLink];
-
-  // useEffect(() => {
-  //   const pdfUrl =
-  //     "https://utfs.io/f/877538c9-48c4-4561-87e1-a1cf737dcd5f-v5ud9p.pdf";
-  //   // DownloadPDF(pdfUrl);
-  //   Rag(pdfUrl);
-  // }, []);
 
   const GetQueryAndwer = async () => {
     const query = "How is Amrok related to her?";
@@ -66,12 +22,6 @@ export const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
     console.log(res);
   };
 
-  useEffect(() => {
-    const pdfUrl =
-      "https://utfs.io/f/877538c9-48c4-4561-87e1-a1cf737dcd5f-v5ud9p.pdf";
-    // UploadPDFContentToVectorDB(pdfUrl);
-    GetQueryAndwer();
-  }, []);
   return (
     <UploadDropzone
       endpoint={endpoint}

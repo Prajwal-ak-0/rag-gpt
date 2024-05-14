@@ -12,18 +12,18 @@ const OpenedSidebar = () => {
   const { isOpen, toggle } = useSidebar();
 
   return (
-    <div className="fixed h-screen w-[280px] bg- shadow-lg shadow-[#303030] flex flex-col justify-between">
+    <div className="fixed h-screen w-[280px] bg- shadow-lg  flex flex-col justify-between">
       <div>
         <Hint label="Collapse Menu" side="right" asChild>
           <div
             onClick={toggle}
-            className="flex items-center justify-center rounded-full h-[50px] m-[10px] hover:bg-[#303030] cursor-pointer w-[50px]"
+            className="flex items-center justify-center rounded-full h-[50px] m-[10px] cursor-pointer w-[50px]"
           >
             <IoMenu className="text-[#fff] text-2xl" />
           </div>
         </Hint>
         <Hint label="New Chat" side="right" asChild>
-          <div className="text-white flex gap-x-6 w-fit ml-4 px-4  items-center justify-center h-[50px] mt-8 rounded-full text-md cursor-pointer hover:bg-[#303030]">
+          <div className="text-white flex gap-x-6 w-fit ml-4 px-4  items-center justify-center h-[50px] mt-8 rounded-full text-md cursor-pointer">
             <FaPlus className="text-[#fff] text-2xl" />
             <p>New Chat</p>
           </div>

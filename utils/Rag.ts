@@ -74,7 +74,7 @@ const chunkAndStoreInVectorDB = async (
   await vectorStore.addDocuments(splits, { namespace: userId });
   await updateDocumentInDB(userId, docs[0], link);
 
-  console.log("Documents added to Pinecone");
+  console.log("Documents added to Pinecone Successfully!");
 };
 
 export const RAG = async (query: string) => {
@@ -110,10 +110,11 @@ export const RAG = async (query: string) => {
     .invoke(updatedQ);
 
   const result = finalLLM(updatedQ, searchResults);
-  console.log("Query : ",query);
-  console.log("Updated Query : ",updatedQ);
-  console.log("Search Results : ",searchResults);
-  console.log("Result : ",result);
+
+  console.log("Query    : ",query);
+  console.log("Updated Query    : ",updatedQ);
+  console.log("Search Results    : ",searchResults);
+  console.log("Result    : ",result);
   return result;
 };
 

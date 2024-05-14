@@ -12,18 +12,18 @@ const ClosedSidebar = () => {
   const { isOpen, toggle } = useSidebar();
 
   return (
-    <div className="fixed w-[70px] shadow-lg shadow-[#303030] flex flex-col justify-between h-screen">
+    <div className="fixed w-[70px] shadow-lg  flex flex-col justify-between h-screen">
       <div className="">
         <Hint label="Expand Menu" side="right" asChild>
           <div
             onClick={toggle}
-            className="flex items-center justify-center rounded-full h-[50px] m-[10px] hover:bg-[#303030] cursor-pointer w-[50px]"
+            className="flex items-center justify-center rounded-full h-[50px] m-[10px]  cursor-pointer w-[50px]"
           >
             <IoMenu className="text-[#fff] text-2xl" />
           </div>
         </Hint>
         <Hint label="New Chat" side="right" asChild>
-          <div className="text-white flex gap-x-6 w-fit ml-2 px-3 py-1  items-center justify-center h-[50px] mt-8 rounded-full text-md cursor-pointer hover:bg-[#303030]">
+          <div className="text-white flex gap-x-6 w-fit ml-2 px-3 py-1  items-center justify-center h-[50px] mt-8 rounded-full text-md cursor-pointer ">
             <FaPlus className="text-[#fff] text-2xl" />
           </div>
         </Hint>
@@ -31,12 +31,12 @@ const ClosedSidebar = () => {
       <div>
         
         <Hint label="Settings" side="right" asChild>
-          <div className="text-white flex gap-x-6 w-fit ml-2 px-3 py-1  items-center justify-center h-[50px] mt-8 rounded-full text-md cursor-pointer hover:bg-[#303030]">
+          <div className="text-white flex gap-x-6 w-fit ml-2 px-3 py-1  items-center justify-center h-[50px] mt-8 rounded-full text-md cursor-pointer ">
             <IoSettingsOutline className="text-[#fff] text-2xl" />
           </div>
         </Hint>
         <Hint label="Profile" side="right" asChild>
-          <div className="text-white flex gap-x-6 w-fit ml-2 px-3 py-1  items-center justify-center h-[50px] mt-2 rounded-full text-md cursor-pointer hover:bg-[#303030]">
+          <div className="text-white flex gap-x-6 w-fit ml-2 px-3 py-1  items-center justify-center h-[50px] mt-2 rounded-full text-md cursor-pointer ">
             <UserButton />
           </div>
         </Hint>

@@ -13,6 +13,12 @@ import { RAG, UploadPDFContentToVectorDB } from "@/utils/Rag";
 const HomePage = () => {
   const { isOpen } = useSidebar();
   const [chatContent, setChatContent] = useState([]);
+
+  useEffect(() => {
+    const url = "https://utfs.io/f/0516ee1f-17c4-4c27-855b-823a5b9b8f71-2diq.pdf";
+    const query = "Can you choose one technology from it and explain it?"
+    RAG(query);
+  })
   
   return (
     <div className="flex">
@@ -20,8 +26,8 @@ const HomePage = () => {
       <div
         className={
           isOpen
-            ? "ml-[280px] bg-[#0e0e0f] w-full min-h-screen text-white flex flex-col gap-y-2"
-            : "ml-[70px] bg-[#0e0e0f] w-full min-h-screen text-white flex flex-col gap-y-2"
+            ? "ml-[280px] w-full min-h-screen text-white flex flex-col gap-y-2"
+            : "ml-[70px] w-full min-h-screen text-white flex flex-col gap-y-2"
         }
       >
         <Navbar />
