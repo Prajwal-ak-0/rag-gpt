@@ -14,11 +14,11 @@ const HomePage = () => {
   const { isOpen } = useSidebar();
   const [chatContent, setChatContent] = useState([]);
 
-  useEffect(() => {
-    const url = "https://utfs.io/f/0516ee1f-17c4-4c27-855b-823a5b9b8f71-2diq.pdf";
-    const query = "Can you choose one technology from it and explain it?"
-    RAG(query);
-  })
+  // useEffect(() => {
+  //   const url = "https://utfs.io/f/0516ee1f-17c4-4c27-855b-823a5b9b8f71-2diq.pdf";
+  //   const query = "Can you choose one technology from it and explain it?"
+  //   RAG(query);
+  // })
   
   return (
     <div className="flex">
