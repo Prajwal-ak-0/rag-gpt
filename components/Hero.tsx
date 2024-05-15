@@ -4,23 +4,25 @@ import * as z from "zod";
 import axios from "axios";
 import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useLayoutEffect, useState } from "react";
+import { use, useLayoutEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { ChatCompletionRequestMessage } from "openai";
 import React, { useRef, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { cn } from "@/lib/utils"; 
+import { cn } from "@/lib/utils";
 
 import { Heading } from "./Heading";
 import { Loader } from "./Loading";
 import { UserAvatar } from "./UserAvatar";
 import { BotAvatar } from "./BotAvatar";
 import Navbar from "@/components/Navbar";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
+import { FileUpload } from "./FileUpload";
+import { RAG } from "@/utils/Rag";
 
 const formSchema = z.object({
   prompt: z.string().min(1, {
@@ -28,13 +30,18 @@ const formSchema = z.object({
   }),
 });
 
-const ConversationPage = () => {
+export type Message = {
+  role: "USER" | "BOT";
+  content: string;
+};
+
+const Hero = () => {
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
   const router = useRouter();
   // const proModal = useProModal();
-  const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,14 +70,18 @@ const ConversationPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const userMessage: ChatCompletionRequestMessage = {
-        role: "user",
+      const userMessage: Message = {
+        role: "USER",
         content: values.prompt,
       };
+
+      console.log("User Message: ", userMessage);
+
       const newMessages = [...messages, userMessage];
 
-      const response = await axios.post("/api/chat", { messages: newMessages });
-      setMessages((current) => [...current, userMessage, response.data]);
+      const response: Message = await RAG(userMessage);
+      console.log(response);
+      setMessages((prevMessages) => [...prevMessages, response]);
 
       form.reset();
     } catch (error: any) {
@@ -107,7 +118,7 @@ const ConversationPage = () => {
             {messages.length === 0 && !isLoading ? (
               <>
                 <div
-                  className="flex flex-col  gap-y-4 h-[calc(72vh-200px)] overflow-y-auto"
+                  className="flex flex-col  gap-y-4 h-[calc(86vh-200px)] overflow-y-auto"
                   ref={messagesContainerRef}
                 >
                   {messages.map((message, index) => (
@@ -118,12 +129,12 @@ const ConversationPage = () => {
                       }
                       className={cn(
                         "p-8 w-full flex items-start gap-x-8 rounded-lg",
-                        message.role === "user"
+                        message.role === "USER"
                           ? "bg-white border border-black/10"
                           : "bg-muted"
                       )}
                     >
-                      {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                      {message.role === "USER" ? <UserAvatar /> : <BotAvatar />}
                       <p className="text-sm">{message.content}</p>
                     </div>
                   ))}
@@ -143,12 +154,12 @@ const ConversationPage = () => {
                       }
                       className={cn(
                         "p-4 w-full flex items-start gap-x-4 rounded-lg",
-                        message.role === "user"
+                        message.role === "USER"
                           ? "bg-emerald-50 border dark:bg-[#080a35] border-black/10"
                           : "dark:bg-[#390b49] bg-purple-100"
                       )}
                     >
-                      {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                      {message.role === "USER" ? <UserAvatar /> : <BotAvatar />}
                       <p className="text-sm">{message.content}</p>
                     </div>
                   ))}
@@ -179,23 +190,18 @@ const ConversationPage = () => {
                   <FormItem className="col-span-12 mt-2 lg:col-span-10">
                     <FormControl className="m-0 p-0">
                       <Input
-                        className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
+                        placeholder="Enter a prompt here."
                         disabled={isLoading}
-                        placeholder="Who is Virat Kohli? "
                         {...field}
-                      />
+                      >
+                        <button className="" type="submit" disabled={isLoading}>
+                          <FileUpload />
+                        </button>
+                      </Input>
                     </FormControl>
                   </FormItem>
                 )}
               />
-              <Button
-                className="col-span-12 m-2 lg:col-span-2 w-full"
-                type="submit"
-                disabled={isLoading}
-                size="icon"
-              >
-                Generate
-              </Button>
             </form>
           </Form>
         </div>
@@ -204,4 +210,4 @@ const ConversationPage = () => {
   );
 };
 
-export default ConversationPage;
+export default Hero;

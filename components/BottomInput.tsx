@@ -7,10 +7,8 @@ import { FileUpload } from "@/components/FileUpload";
 
 const BottomInput = () => {
   return (
-    <div className="h-24 mx-12 rounded-xl">
-      <Input placeholder="Enter a prompt here.">
-        <FileUpload />
-      </Input>
+    <div className="">
+      
     </div>
   );
 };

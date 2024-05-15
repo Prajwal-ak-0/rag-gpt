@@ -25,6 +25,7 @@ import { pull } from "langchain/hub";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { HandlebarsPromptTemplate } from "langchain/experimental/prompts/handlebars";
+import { Message } from "@/components/Hero";
 
 enum SenderType {
   USER,
@@ -41,7 +42,7 @@ export const UploadPDFContentToVectorDB = async (url: string) => {
   const userId = await getUserId();
 
   if (typeof userId === "string") {
-    chunkAndStoreInVectorDB(docs, userId,url);
+    chunkAndStoreInVectorDB(docs, userId, url);
   } else {
     console.error(userId.error);
   }
@@ -77,13 +78,13 @@ const chunkAndStoreInVectorDB = async (
   console.log("Documents added to Pinecone Successfully!");
 };
 
-export const RAG = async (query: string) => {
+export const RAG = async (query: Message) => {
   const userId = await getUserId();
 
   let updatedQ: string;
 
   if (typeof userId === "string") {
-    updatedQ = await updatedQuery(userId, query);
+    updatedQ = await updatedQuery(userId, query.content);
   } else {
     console.error(userId.error);
     updatedQ = "";
@@ -109,13 +110,15 @@ export const RAG = async (query: string) => {
     })
     .invoke(updatedQ);
 
-  const result = finalLLM(updatedQ, searchResults);
+  const result = await finalLLM(updatedQ, searchResults);
 
-  console.log("Query    : ",query);
-  console.log("Updated Query    : ",updatedQ);
-  console.log("Search Results    : ",searchResults);
-  console.log("Result    : ",result);
-  return result;
+  console.log("Result 2    : ", result);
+  const finalResult: Message = {
+    role: "BOT",
+    content: result ?? '',
+  }
+
+  return finalResult;
 };
 
 const finalLLM = async (
@@ -157,7 +160,7 @@ const finalLLM = async (
   updateHistoryInDB(userId, query, SenderType.USER);
   updateHistoryInDB(userId, result, SenderType.BOT);
 
-  console.log("Final result: ", result);
+  console.log("Result 1   : ", result);
 
   return result;
 };
@@ -197,7 +200,7 @@ const retrieveHistory = async (userId: string) => {
 
 const updatedQuery = async (userId: string, query: string) => {
   const llm = new ChatOpenAI({ model: "gpt-3.5-turbo", temperature: 0 });
-  
+
   const contextualizeQSystemPrompt = `Given a chat history and the latest user question which might reference context in the chat history formulate a standalone question which can be understood without the chat history. Do NOT answer the question, just reformulate it if needed and otherwise return it as is.`;
 
   const contextualizeQPrompt = ChatPromptTemplate.fromMessages([
@@ -212,8 +215,6 @@ const updatedQuery = async (userId: string, query: string) => {
 
   const history = await retrieveHistory(userId);
 
-  console.log("History: ", history);
-
   const updatedQ = await contextualizeQChain.invoke({
     chat_history: history,
     question: query,
@@ -222,7 +223,11 @@ const updatedQuery = async (userId: string, query: string) => {
   return updatedQ;
 };
 
-const updateDocumentInDB = async (userId:string, document: Document<Record<string, any>>, link:string) => {
+const updateDocumentInDB = async (
+  userId: string,
+  document: Document<Record<string, any>>,
+  link: string
+) => {
   try {
     await client.document.create({
       data: {
@@ -234,7 +239,7 @@ const updateDocumentInDB = async (userId:string, document: Document<Record<strin
   } catch (error) {
     console.log("Error in updating document: ", error);
   }
-}
+};
 
 const updateHistoryInDB = async (
   userId: string,
