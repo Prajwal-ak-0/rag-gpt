@@ -12,7 +12,7 @@ const OpenedSidebar = () => {
   const { isOpen, toggle } = useSidebar();
 
   return (
-    <div className="fixed h-screen w-[280px] bg- shadow-lg  flex flex-col justify-between">
+    <div className="fixed h-screen w-[280px] bg- shadow-2xl  flex flex-col justify-between">
       <div>
         <Hint label="Collapse Menu" side="right" asChild>
           <div
