@@ -23,6 +23,7 @@ import Navbar from "@/components/Navbar";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { FileUpload } from "./FileUpload";
 import { RAG } from "@/utils/Rag";
+import { GetHistory } from "@/utils/GetHistory";
 
 const formSchema = z.object({
   prompt: z.string().min(1, {
@@ -77,11 +78,9 @@ const Hero = () => {
 
       console.log("User Message: ", userMessage);
 
-      const newMessages = [...messages, userMessage];
-
       const response: Message = await RAG(userMessage);
       console.log(response);
-      setMessages((prevMessages) => [...prevMessages, response]);
+      setMessages((prevMessages) => [...prevMessages, userMessage, response]);
 
       form.reset();
     } catch (error: any) {
@@ -95,16 +94,35 @@ const Hero = () => {
     }
   };
 
+const getHistory = async () => {
+  try {
+    const history = await GetHistory();
+    if (Array.isArray(history)) {
+      const updatedHistory:Message[] = history.map((message) => ({
+        role: message.sender,
+        content: message.message,
+      }));
+      return updatedHistory; // return the updated history
+    } else {
+      return { error: "Invalid history format" };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+useEffect(() => {
+  getHistory().then((history) => {
+    if (Array.isArray(history)) {
+      setMessages(history);
+    }
+    console.log(history);
+  });
+}, []);
+
   return (
-    <div className="h-full">
-      <div className="pt-8 mb-8">
-        <Heading
-          title="Conversation"
-          description="Our most advanced conversation model."
-          iconColor="text-violet-500"
-          bgColor="bg-violet-500/10"
-        />
-      </div>
+    <div className="h-full text-black">
+
       <div>
         <div className="px-4 lg:px-8">
           <div className="space-y-2">

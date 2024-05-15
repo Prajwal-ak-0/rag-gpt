@@ -2,6 +2,7 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 
 import client from "@/lib/db";
 import { getUser  } from "@/utils/GetUser";
+import { UploadPDFContentToVectorDB } from "@/utils/Rag";
  
 const f = createUploadthing();
  
@@ -40,9 +41,13 @@ export const ourFileRouter = {
               }
             })
 
-            console.log("Link", link);
+            const uploadFiles = await UploadPDFContentToVectorDB(file.url);
 
+            if(uploadFiles.success){
+              console.log("Upload Success");
+            }
             
+            console.log("Link", link);
         }
 
         return { fileUrl: file.url };

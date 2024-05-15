@@ -32,14 +32,12 @@ const HomePage = () => {
           }
         >
           <Navbar />
-          <Hero />
-          <BottomInput />
+          {/* <Hero /> */}
         </div>
       </div>
       <div className="md:hidden">
         <Navbar />
-        <Hero />
-        <BottomInput />
+        {/* <Hero /> */}
       </div>
     </>
   );

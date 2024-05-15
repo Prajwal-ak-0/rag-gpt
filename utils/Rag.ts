@@ -46,6 +46,10 @@ export const UploadPDFContentToVectorDB = async (url: string) => {
   } else {
     console.error(userId.error);
   }
+
+  return {
+    success: true,
+  }
 };
 
 const chunkAndStoreInVectorDB = async (

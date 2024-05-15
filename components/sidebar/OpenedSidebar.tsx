@@ -1,18 +1,40 @@
 "use client";
 
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import { Hint } from "../Hint";
 import { IoMenu } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
 import useSidebar from "@/hooks/useSideBar";
 import { IoSettingsOutline } from "react-icons/io5";
 import { UserButton } from "@clerk/nextjs";
+import { GetUploadedFiles } from "@/utils/GetUploadedFiles";
 
 const OpenedSidebar = () => {
   const { isOpen, toggle } = useSidebar();
+  const [fileName, setFileName] = useState("");
+  const [fileLink, setFileLink] = useState("");
+
+  const getUploadedFiles = async () => {
+    const files = await GetUploadedFiles();
+
+    if (Array.isArray(files)) {
+      for (let file of files) {
+        setFileName(file?.title ?? "");
+        setFileLink(file?.link ?? "");
+      }
+    } else if ("error" in files) {
+      console.error(files.error);
+    }
+
+    console.log(files);
+  };
+
+  useEffect(() => {
+    getUploadedFiles();
+  }, []);
 
   return (
-    <div className="fixed h-screen w-[280px] bg- shadow-2xl  flex flex-col justify-between">
+    <div className="fixed h-screen w-[280px] shadow-2xl  flex flex-col justify-between">
       <div>
         <Hint label="Collapse Menu" side="right" asChild>
           <div
@@ -29,6 +51,31 @@ const OpenedSidebar = () => {
           </div>
         </Hint>
       </div>
+
+      <div></div>
+
+      <div>
+        <p>
+          <span className="text-black text-md font-semibold">
+            Uploaded Files
+          </span>
+        </p>
+        {
+          <div className="flex flex-col gap-y-2 mt-4">
+            <div className="flex gap-x-4 items-center">
+              <p className="text-black text-md font-semibold">{fileName}</p>
+              <a
+                href={fileLink}
+                target="_blank"
+                className="text-blue-500 text-md font-semibold"
+              >
+                View
+              </a>
+            </div>
+          </div>
+        }
+      </div>
+
       <div>
         <Hint label="Settings" side="right" asChild>
           <div className="text-black flex gap-x-4 w-fit ml-2 px-4  items-center justify-center h-[50px] mt-8 rounded-full text-md font-semibold cursor-pointer">

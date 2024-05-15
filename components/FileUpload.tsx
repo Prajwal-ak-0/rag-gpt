@@ -36,6 +36,7 @@ import { useUploadThing } from "@/utils/uploadthing";
 import { useCallback, useState } from "react";
 import { FaFileUpload } from "react-icons/fa";
 import { Hint } from "./Hint";
+import { toast } from "sonner";
 
 export function FileUpload() {
   const [files, setFiles] = useState<File[]>([]);
@@ -45,13 +46,14 @@ export function FileUpload() {
 
   const { startUpload, permittedFileInfo } = useUploadThing("fileUploader", {
     onClientUploadComplete: () => {
-      alert("uploaded successfully!");
+      toast.success("uploaded successfully!");
+      
     },
     onUploadError: () => {
-      alert("error occurred while uploading");
+      toast.error("error occurred while uploading");
     },
     onUploadBegin: () => {
-      alert("upload has begun");
+      toast.info("upload has begun");
     },
   });
 
