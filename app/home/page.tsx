@@ -32,12 +32,12 @@ const HomePage = () => {
           }
         >
           <Navbar />
-          {/* <Hero /> */}
+          <Hero />
         </div>
       </div>
       <div className="md:hidden">
         <Navbar />
-        {/* <Hero /> */}
+        <Hero />
       </div>
     </>
   );

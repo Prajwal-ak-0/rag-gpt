@@ -34,14 +34,14 @@ const OpenedSidebar = () => {
   }, []);
 
   return (
-    <div className="fixed h-screen w-[280px] shadow-2xl  flex flex-col justify-between">
-      <div>
+    <div className="fixed  w-[280px] shadow-2xl min-h-screen  flex flex-col">
+      <div className="flex flex-col">
         <Hint label="Collapse Menu" side="right" asChild>
           <div
             onClick={toggle}
-            className="flex items-center justify-center ml-4 rounded-full h-[50px] m-[10px] cursor-pointer w-[50px] "
+            className="flex items-center justify-center ml-4 rounded-full h-[50px] m-[8px] cursor-pointer w-[50px] "
           >
-            <IoMenu className="text-white text-xl bg-gradient-to-br from-[#1e2023] to-[#23272b] w-[40px] h-[40px] px-2 py-1 rounded-full" />
+            <IoMenu className="text-white text-xl bg-gradient-to-br from-[#1e2023] to-[#23272b] w-[40px] h-[40px] px-2 rounded-full" />
           </div>
         </Hint>
         <Hint label="New Chat" side="right" asChild>
@@ -52,31 +52,51 @@ const OpenedSidebar = () => {
         </Hint>
       </div>
 
-      <div></div>
-
-      <div>
-        <p>
-          <span className="text-black text-md font-semibold">
-            Uploaded Files
-          </span>
-        </p>
-        {
-          <div className="flex flex-col gap-y-2 mt-4">
-            <div className="flex gap-x-4 items-center">
-              <p className="text-black text-md font-semibold">{fileName}</p>
-              <a
-                href={fileLink}
-                target="_blank"
-                className="text-blue-500 text-md font-semibold"
-              >
-                View
-              </a>
+      <div className="flex flex-col flex-grow py-4 ml-6">
+        <div className="">
+          <p>
+            <span className="text-black text-md font-semibold">History</span>
+          </p>
+          {
+            <div className="flex flex-col gap-y-2 mt-4">
+              <div className="flex gap-x-4 items-center">
+                <p className="text-black text-md font-semibold">{fileName}</p>
+                <a
+                  href={fileLink}
+                  target="_blank"
+                  className="text-blue-500 text-md font-semibold"
+                >
+                  View
+                </a>
+              </div>
             </div>
-          </div>
-        }
+          }
+        </div>
+
+        <div className="">
+          <p>
+            <span className="text-black text-md font-semibold">
+              Uploaded Files
+            </span>
+          </p>
+          {
+            <div className="flex flex-col gap-y-2 mt-4">
+              <div className="flex gap-x-4 items-center">
+                <p className="text-black text-md font-semibold">{fileName}</p>
+                <a
+                  href={fileLink}
+                  target="_blank"
+                  className="text-blue-500 text-md font-semibold"
+                >
+                  View
+                </a>
+              </div>
+            </div>
+          }
+        </div>
       </div>
 
-      <div>
+      <div className="flex flex-col">
         <Hint label="Settings" side="right" asChild>
           <div className="text-black flex gap-x-4 w-fit ml-2 px-4  items-center justify-center h-[50px] mt-8 rounded-full text-md font-semibold cursor-pointer">
             <IoSettingsOutline className="text-white text-xl bg-gradient-to-br from-[#1e2023] to-[#23272b] w-[40px] h-[40px] px-2 py-1 rounded-full" />

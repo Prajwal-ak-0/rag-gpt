@@ -133,10 +133,10 @@ useEffect(() => {
                 </div>
               </div>
             )}
-            {messages.length === 0 && !isLoading ? (
+            {messages.length==0 && !isLoading ? (
               <>
                 <div
-                  className="flex flex-col  gap-y-4 h-[calc(86vh-200px)] overflow-y-auto"
+                  className="flex flex-col  gap-y-4 h-[calc(100vh-180px)] overflow-y-auto"
                   ref={messagesContainerRef}
                 >
                   {messages.map((message, index) => (
@@ -192,20 +192,19 @@ useEffect(() => {
               onSubmit={form.handleSubmit(onSubmit)}
               className="
             rounded-lg
-            mx-4
             mb-4
             border
             px-3
             md:px-8
             focus-within:shadow-sm
             grid
-            grid-cols-12
+            md:mx-20
           "
             >
               <FormField
                 name="prompt"
                 render={({ field }) => (
-                  <FormItem className="col-span-12 mt-2 lg:col-span-10">
+                  <FormItem className="">
                     <FormControl className="m-0 p-0">
                       <Input
                         placeholder="Enter a prompt here."
